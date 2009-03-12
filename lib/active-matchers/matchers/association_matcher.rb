@@ -44,7 +44,12 @@ module ActiveMatchers
             @error = "#{@model.name}.#{attribute} should be #{@macro}, but is #{assoc.to_hash[:macro]}"
             return false
           end
-          if assoc.to_hash[:options] != @options
+          @options_clone = @options.clone
+          if !assoc.to_hash[:options][:extend]
+            @options_clone.delete(:extend)
+          end
+
+          if assoc.to_hash[:options] != @options_clone
             @error = "#{@model.name}.#{attribute} should have options #{@options.inspect}, but has options #{assoc.to_hash[:options].inspect}"
             return false
           end
