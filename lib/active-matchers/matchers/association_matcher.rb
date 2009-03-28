@@ -33,6 +33,7 @@ module ActiveMatchers
         
         @options ||= {}
         @options[:extend] ||= []
+        @options[:autosave] ||= true
   
         @attributes.each do |attribute|
           assoc = @model.reflect_on_association(attribute)
@@ -47,6 +48,11 @@ module ActiveMatchers
           @options_clone = @options.clone
           if !assoc.to_hash[:options][:extend]
             @options_clone.delete(:extend)
+          end
+          
+
+          unless assoc.to_hash[:options][:autosave]
+           @options_clone.delete(:autosave)
           end
 
           if assoc.to_hash[:options] != @options_clone
